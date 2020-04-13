@@ -60,5 +60,8 @@ pub mod history;
 /// Realtime quotes
 pub mod realtime;
 
+/// Symbol profile
+pub mod profile;
+
 // re-export stuff for external use
 pub use error::{Error};
