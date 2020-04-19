@@ -52,7 +52,7 @@
 pub use market_finance::{ Bar, Interval, Quote, Timestamped, TradingSession };
 
 mod error;
-mod chart;
+mod yahoo;
 
 /// Historical quotes
 pub mod history;
@@ -61,7 +61,8 @@ pub mod history;
 pub mod realtime;
 
 /// Symbol profile
-pub mod profile;
+mod profile;
+pub use profile::Profile;
 
 // re-export stuff for external use
-pub use error::{Error};
+pub use error::Error;

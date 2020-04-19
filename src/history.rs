@@ -1,9 +1,9 @@
 use chrono::{DateTime, Utc};
 use snafu::{ensure};
 
-use crate::{ Bar, Error, error, Interval, chart };
+use crate::{ Bar, Error, error, Interval, yahoo };
 
-fn aggregate_bars(data: chart::Result) -> Result<Vec<Bar>, Error> {
+fn aggregate_bars(data: yahoo::Result) -> Result<Vec<Bar>, Error> {
    let timestamps = &data.timestamps;
    let quotes = &data.indicators.quotes[0];
 
@@ -43,7 +43,7 @@ fn aggregate_bars(data: chart::Result) -> Result<Vec<Bar>, Error> {
 /// }
 /// ```
 pub fn retrieve(symbol: &str) -> Result<Vec<Bar>, Error> {
-   match chart::load_daily(symbol, Interval::_6mo) {
+   match yahoo::load_daily(symbol, Interval::_6mo) {
       Err(error) => Err(error),
       Ok(data) => aggregate_bars(data)
    }
@@ -70,7 +70,7 @@ pub fn retrieve_interval(symbol: &str, interval: Interval) -> Result<Vec<Bar>, E
    // pre-conditions
    ensure!(!interval.is_intraday(), error::NoIntraday { interval });
 
-   match chart::load_daily(symbol, interval) {
+   match yahoo::load_daily(symbol, interval) {
       Err(error) => Err(error),
       Ok(data) => aggregate_bars(data)
    }
@@ -98,7 +98,7 @@ pub fn retrieve_range(symbol: &str, start: DateTime<Utc>, end: Option<DateTime<U
    println!("{} {}", start, _end);
    ensure!(_end.signed_duration_since(start).num_seconds() > 0, error::InvalidStartDate);
 
-   match chart::load_daily_range(symbol, start.timestamp(), _end.timestamp()) {
+   match yahoo::load_daily_range(symbol, start.timestamp(), _end.timestamp()) {
       Err(error) => Err(error),
       Ok(data) => aggregate_bars(data)
    }
